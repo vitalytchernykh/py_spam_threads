@@ -14,6 +14,10 @@ from datetime import datetime
 # send thread
 class SendThread(threading.Thread):
 
+    def setMQobj(self, MQobj):
+        self.MQobj = MQobj
+        return self
+
     def setCount(self, count):
         self.count = count
         return self
@@ -25,10 +29,11 @@ class SendThread(threading.Thread):
         for i in range(self.count):
            msg = datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f') + ' ' + threadName + ' message:' + str(i) 
            try:
-               print ('%s: send succesful: %s' % (threadName,msg))
+               print ('%s: send to %s succesful: %s' % (threadName,self.MQobj,msg))
            except:
-               print ('%s: failed to send: %s' % (threadName,msg))
+               print ('%s: failed to send: %s' % (threadName,self.MQobj,msg))
         print ('%s stop working' % threadName)
         return self
+
 
 

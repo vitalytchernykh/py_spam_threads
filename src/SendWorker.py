@@ -10,30 +10,27 @@ __date__ = "$20.01.2017 18:03:06$"
 
 import threading
 from datetime import datetime
+from MQobj import MQobject
 
 # send thread
 class SendThread(threading.Thread):
 
-    def setMQobj(self, MQobj):
-        self.MQobj = MQobj
-        return self
-
-    def setCount(self, count):
-        self.count = count
-        return self
+    def __init__(self, mq_conn_parms, cnt):
+        threading.Thread.__init__(self)
+#        self.mq_obj = MQobject(mq_conn_parms)
+        self.totalMsgCount = cnt
 
     def run(self):
         # send some messages
         threadName = self.getName()
-        print ('%s start working' % threadName)
-        for i in range(self.count):
+        print ('\n%s start working' % threadName)
+        for i in range(self.totalMsgCount):
            msg = datetime.now().strftime('%Y-%m-%d %H:%M:%S,%f') + ' ' + threadName + ' message:' + str(i) 
            try:
-               print ('%s: send to %s succesful: %s' % (threadName,self.MQobj,msg))
+#               self.mq_obj.putMsg(msg)
+               print ('\n%s: send succesful: %s' % (threadName, msg))
            except:
-               print ('%s: failed to send: %s' % (threadName,self.MQobj,msg))
-        print ('%s stop working' % threadName)
-        return self
+               print ('%s: send failed: %s' % (threadName, msg))
+        print ('\n%s stop working' % threadName)
 
-
-
+#        self.mq_obj.cleanUp()
